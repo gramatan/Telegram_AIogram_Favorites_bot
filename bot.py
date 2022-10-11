@@ -23,9 +23,13 @@ async def send_welcome(message: types.Message):
 async def send_welcome(message: types.Message):
     await message.reply('Just leave.')
 
+
 @dp.message_handler(commands='dice')
 async def send_dice(message: types.Message):
     await message.answer_dice(emoji='🎲')
+
+@dp.message_handler(commands='list')
+async def list_of_chats_with_user_and_bot:
 
 
 if __name__ == '__main__':
