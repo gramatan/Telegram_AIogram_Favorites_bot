@@ -30,7 +30,7 @@ async def send_dice(message: types.Message):
 
 @dp.message_handler(commands='list')
 async def list_of_chats_with_user_and_bot:
-
+    pass
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
