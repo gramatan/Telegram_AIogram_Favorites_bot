@@ -54,7 +54,7 @@ async def keyboard_callback_handler(callback: types.CallbackQuery):
 
 @dp.message_handler()
 async def other(message: types.Message):
-    if len(message.text.split(' ')) > 1:
+    if message.text.count(' ') > 0:
         await message.reply(f'where to send your message({message.text.upper()})', reply_markup=keyboard2)
     else:
         await message.reply('message to short')
