@@ -26,16 +26,22 @@ keyboard2 = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-# handlers starts here
+# one handler for debug them all
+@dp.message_handler(lambda message: message.text and 'getinfo' in message.text.lower())
+async def start_process(message: types.Message):
+    await message.reply(message)
+
+
+# message handlers starts here
 @dp.message_handler(lambda message: message.text and '#notes' in message.text.lower())
 async def start_process(message: types.Message):
-    await message.send_copy(chat_id=NOTES)
+    await message.send_copy(chat_id=NOTES, disable_notification=True)
     await message.delete()
 
 
 @dp.message_handler(lambda message: message.text and '#saved' in message.text.lower())
 async def send_welcome(message: types.Message):
-    await message.send_copy(chat_id=SAVED2)
+    await message.send_copy(chat_id=SAVED2, disable_notification=True)
     await message.delete()
 
 
@@ -44,54 +50,55 @@ async def send_welcome(message: types.Message):
     await message.answer('send something then press button')
 
 
-@dp.message_handler(lambda message: message.text and 'dice' in message.text.lower(), chat_id=LOCAL)
+@dp.message_handler(lambda message: message.text and 'dice' in message.text.lower())
 async def send_dice(message: types.Message):
-    await message.answer_dice(emoji='🎲')
+    await message.answer_dice(emoji='🎲', disable_notification=True)
 
 
 @dp.message_handler(content_types=ContentType.ANY, chat_id=LOCAL)
 async def other(message: types.Message):
-    await message.send_copy(chat_id=LOCAL, reply_markup=keyboard2)
+    await message.send_copy(chat_id=LOCAL, reply_markup=keyboard2, disable_notification=True)
 
 
+# Query handlers
 @dp.callback_query_handler(text='notes')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=NOTES, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=NOTES, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to notes')
 
 
 @dp.callback_query_handler(text='saved2')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=SAVED2, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=SAVED2, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to saved2')
 
 
 @dp.callback_query_handler(text='learning')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=LEARNING, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=LEARNING, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
-    await callback_query.message.answer('sent to learning')
+    await callback_query.message.answer('sent to learning', disable_notification=True)
 
 
 @dp.callback_query_handler(text='lazada')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=LAZADA, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=LAZADA, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
-    await callback_query.message.answer('sent to lazada')
+    await callback_query.message.answer('sent to lazada', disable_notification=True)
 
 
 @dp.callback_query_handler(text='family')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=FAMILY1, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=FAMILY1, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
-    await callback_query.message.answer('sent to family')
+    await callback_query.message.answer('sent to family', disable_notification=True)
 
 
 @dp.callback_query_handler(text='saved3')
 async def process_callback_button1(callback_query: types.CallbackQuery):
-    await callback_query.message.send_copy(chat_id=SAVED3, reply_markup=keyboard)
+    await callback_query.message.send_copy(chat_id=SAVED3, reply_markup=keyboard, disable_notification=True)
     await callback_query.message.delete()
 
 if __name__ == '__main__':
