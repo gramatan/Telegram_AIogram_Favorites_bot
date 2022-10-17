@@ -1,12 +1,14 @@
 import asyncio
 import logging
 
+from datetime import datetime
+
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ContentType
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.utils.callback_data import CallbackData
 
-from config import BOT_TOKEN, LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, TEST
+from config import BOT_TOKEN, LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
 
 # logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
@@ -47,7 +49,7 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(commands=['start', 'help'], chat_id=LOCAL)
 async def send_welcome(message: types.Message):
-    await message.answer('send something then press button')
+    await message.answer(text=HELP)
 
 
 @dp.message_handler(lambda message: message.text and 'dice' in message.text.lower())
@@ -55,9 +57,15 @@ async def send_dice(message: types.Message):
     await message.answer_dice(emoji='🎲', disable_notification=True)
 
 
+# main handler
 @dp.message_handler(content_types=ContentType.ANY, chat_id=LOCAL)
 async def other(message: types.Message):
+    if message.forward_date:
+        message_timestamp = message.forward_date.strftime('%Y-%m-%d %H:%M:%S')
+        message_data = f'{message.forward_from_chat.title} at {message_timestamp}'
+        await message.answer(message_data)
     await message.send_copy(chat_id=LOCAL, reply_markup=keyboard2, disable_notification=True)
+    await message.delete()
 
 
 # Query handlers
