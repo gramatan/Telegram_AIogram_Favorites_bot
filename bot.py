@@ -53,12 +53,7 @@ async def send_dice(message: types.Message):
 async def other(message: types.Message):
     await message.send_copy(chat_id=LOCAL, reply_markup=keyboard2)
 
-# @dp.message_handler(content_types=ContentType.ANY)
-# async def other(message: types.Message):
-#     # await message.send_copy(chat_id=LOCAL, reply_markup=keyboard2)
-#     await message.answer(message)
 
-# callback_query starts here
 @dp.callback_query_handler(text='notes')
 async def process_callback_button1(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=NOTES, reply_markup=keyboard)
@@ -99,12 +94,5 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=SAVED3, reply_markup=keyboard)
     await callback_query.message.delete()
 
-# keyboard2 = InlineKeyboardMarkup(inline_keyboard=[
-#     [InlineKeyboardButton('notes', callback_data='notes'),
-#      InlineKeyboardButton('saved2', callback_data='saved2'),
-#      InlineKeyboardButton('learning', callback_data='learning')],
-#     [InlineKeyboardButton('saved3', callback_data='saved3'),
-#      InlineKeyboardButton('lazada', callback_data='lazada'),
-#      InlineKeyboardButton('family', callback_data='family')],
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
