@@ -3,6 +3,8 @@ import logging
 import asyncpg
 
 from datetime import datetime
+from db.postgresql import Database
+
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ContentType
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -15,13 +17,15 @@ logging.basicConfig(level=logging.DEBUG)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 cb = CallbackData('keyboard', 'action')
+loop = asyncio.get_event_loop()
+db = Database(loop)
 
 
 # DB connector
 # async def run():
 #     conn = await asyncpg.connect('postgresql://postgres@localhost/async_bot', password='Jkexe0d9')
 #     values = await conn.fetch(
-#         'SELECT * FROM mytable WHERE id = $1',
+#         'SELECT * FROM user WHERE id = $1',
 #         10,
 #     )
 #     await conn.close()
