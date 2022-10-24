@@ -1,6 +1,3 @@
-from bot import bot
-
-
 async def create_table_users(pool):
     sql = '''
     CREATE TABLE IF NOT EXISTS public.bot_users
@@ -37,7 +34,26 @@ async def create_table_log_types(pool):
 
 
 async def create_table_logs(pool):
-    pass
+    sql = '''
+    CREATE TABLE IF NOT EXISTS public.logs
+    (
+        datetime timestamp without time zone NOT NULL,
+        "user" bigint NOT NULL,
+        type smallint NOT NULL,
+        action text NOT NULL,
+        CONSTRAINT "user" FOREIGN KEY ("user")
+            REFERENCES public.bot_users (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            NOT VALID,
+        CONSTRAINT log_type FOREIGN KEY (type)
+            REFERENCES public.log_id (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            NOT VALID
+    );
+       '''
+    await pool.execute(sql)
 
 
 async def run(pool):
