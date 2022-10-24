@@ -37,11 +37,11 @@ async def create_table_logs(pool):
     sql = '''
     CREATE TABLE IF NOT EXISTS public.logs
     (
-        datetime timestamp without time zone NOT NULL,
-        "user" bigint NOT NULL,
+        datetime text NOT NULL,
+        user_id bigint NOT NULL,
         type smallint NOT NULL,
         action text NOT NULL,
-        CONSTRAINT "user" FOREIGN KEY ("user")
+        CONSTRAINT "user" FOREIGN KEY (user_id)
             REFERENCES public.bot_users (id) MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE NO ACTION

@@ -25,12 +25,14 @@ async def create_new_user(message: types.Message):
 @dp.message_handler(lambda message: message.text and '#saved' in message.text.lower())
 async def saved_notes(message: types.Message):
     await message.send_copy(chat_id=SAVED2, disable_notification=True)
+    await postgresql.user_to_logs(bot['db'], message, prefix='#saved')
     await message.delete()
 
 
 @dp.message_handler(lambda message: message.text and '#' in message.text.lower())
 async def any_notes(message: types.Message):
     await message.send_copy(chat_id=NOTES, disable_notification=True)
+    await postgresql.user_to_logs(bot['db'], message, prefix='#notes')
 
 
 @dp.message_handler(commands=['start', 'help'], chat_id=LOCAL)
@@ -59,6 +61,7 @@ async def main_message_handler(message: types.Message):
                 message_data = f'{message.forward_from.username} at {message_timestamp}'
             await message.answer(message_data)
         await message.send_copy(chat_id=chat_id, reply_markup=main_keyboard, disable_notification=True)
+        await postgresql.user_to_logs(bot['db'], message)
         await message.delete()
 
 
