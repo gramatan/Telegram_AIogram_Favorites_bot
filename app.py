@@ -3,9 +3,9 @@ import logging
 import asyncpg
 
 from config import DB_NAME, DB_HOST, DB_PASS, DB_PORT, DB_USER
-from db import create_tables, postgresql
-from loader import bot, cb, dp
-import handlers.handlers    # important shit
+from db import create_tables
+from loader import bot, dp
+import handlers.handlers    # important shit. do not del
 
 # logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
@@ -32,4 +32,3 @@ async def main() -> None:
 
 if __name__ == '__main__':
     asyncio.run(main())
-    # executor.start_polling(dp, skip_updates=False)

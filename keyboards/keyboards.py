@@ -1,8 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-keyboard = InlineKeyboardMarkup(inline_keyboard=[])
+blank_keyboard = InlineKeyboardMarkup(inline_keyboard=[])
 
-keyboard2 = InlineKeyboardMarkup(inline_keyboard=[
+main_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton('notes', callback_data='notes'),
      InlineKeyboardButton('saved2', callback_data='saved2'),
      InlineKeyboardButton('learning', callback_data='learning')],

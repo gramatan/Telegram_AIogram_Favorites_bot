@@ -22,7 +22,7 @@ async def create_table_log_types(pool):
     );
     '''
     await pool.execute(sql)
-    values = [(1, 'local'), (2, 'group'), (3, 'forward')]
+    values = [(1, 'user_local'), (2, 'user_group'), (3, 'user_forward'), (4, 'bot_action')]
     sql2 = '''
     INSERT INTO log_id (id, definition)
     VALUES 
