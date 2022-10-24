@@ -1,7 +1,9 @@
 asyncio==3.4.3
 aiogram==2.22.2
 
+sqlalchemy==1.4.42
 asyncpg==0.26.0
 asyncpgsa==0.27.1
+
 
 aiopg==1.3.5

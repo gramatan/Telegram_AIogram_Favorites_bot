@@ -3,47 +3,42 @@ import logging
 import asyncpg
 
 from datetime import datetime
-from db.postgresql import Database
 
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ContentType
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.utils.callback_data import CallbackData
 
-from config import BOT_TOKEN, LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
+from config import BOT_TOKEN, LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP, DB_CONNECTION, DB_NAME
+from config import DB_HOST, DB_PASS, DB_PORT, DB_USER
+from keyboards.keyboards import keyboard, keyboard2
+from db import create_tables, postgresql
 
 # logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 cb = CallbackData('keyboard', 'action')
-loop = asyncio.get_event_loop()
-db = Database(loop)
 
 
-# DB connector
-# async def run():
-#     conn = await asyncpg.connect('postgresql://postgres@localhost/async_bot', password='Jkexe0d9')
-#     values = await conn.fetch(
-#         'SELECT * FROM user WHERE id = $1',
-#         10,
-#     )
-#     await conn.close()
-
-# loop = asyncio.get_event_loop()
-
-# keyboards
-keyboard = InlineKeyboardMarkup(inline_keyboard=[])
-
-keyboard2 = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton('notes', callback_data='notes'),
-     InlineKeyboardButton('saved2', callback_data='saved2'),
-     InlineKeyboardButton('learning', callback_data='learning')],
-    [InlineKeyboardButton('saved3', callback_data='saved3'),
-     InlineKeyboardButton('lazada', callback_data='lazada'),
-     InlineKeyboardButton('family', callback_data='family')],
-    [InlineKeyboardButton('Done', callback_data='cancel')],
-])
+async def main() -> None:
+    bot['db'] = await asyncpg.create_pool(
+        host=DB_HOST,
+        port=DB_PORT,
+        database=DB_NAME,
+        user=DB_USER,
+        # loop=event_loop,
+        password=DB_PASS,
+        min_size=3,
+        max_size=5
+    )
+    await create_tables.run(bot['db'])
+    try:
+        await dp.start_polling()
+    finally:
+        await dp.storage.close()
+        await dp.storage.wait_closed()
+        await (await bot.get_session()).close()
 
 
 # one handler for debug them all
@@ -51,6 +46,12 @@ keyboard2 = InlineKeyboardMarkup(inline_keyboard=[
 async def get_message_info(message: types.Message):
     # await message.reply(message)
     await bot.send_message(chat_id=LOCAL, text=message)
+
+
+@dp.message_handler(commands='add_user', chat_id=LOCAL)
+async def create_new_user(message: types.Message):
+    await postgresql.create_user(bot['db'], message.from_user.id, message.from_user.first_name, message.from_user.username)
+    await message.answer('user created')
 
 
 # message handlers starts here
@@ -142,6 +143,5 @@ async def process_callback_cancel(callback_query: types.CallbackQuery):
     await callback_query.message.delete()
 
 if __name__ == '__main__':
-    # asyncio.get_event_loop().run_until_complete(run())
-    executor.start_polling(dp, skip_updates=False)
-
+    asyncio.run(main())
+    # executor.start_polling(dp, skip_updates=False)
