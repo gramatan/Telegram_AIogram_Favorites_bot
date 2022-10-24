@@ -1,47 +1,13 @@
-import asyncio
-import logging
-import asyncpg
+from aiogram import Dispatcher, types
+from aiogram.types import ContentType
 
-from datetime import datetime
-
-from aiogram import Bot, Dispatcher, types, executor
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ContentType
-from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.utils.callback_data import CallbackData
-
-from config import BOT_TOKEN, LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP, DB_CONNECTION, DB_NAME
-from config import DB_HOST, DB_PASS, DB_PORT, DB_USER
+from config import LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
 from keyboards.keyboards import keyboard, keyboard2
-from db import create_tables, postgresql
-
-# logging.basicConfig(level=logging.INFO)
-logging.basicConfig(level=logging.DEBUG)
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
-cb = CallbackData('keyboard', 'action')
+from loader import dp, bot
+from db import postgresql
 
 
-async def main() -> None:
-    bot['db'] = await asyncpg.create_pool(
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
-        user=DB_USER,
-        # loop=event_loop,
-        password=DB_PASS,
-        min_size=3,
-        max_size=5
-    )
-    await create_tables.run(bot['db'])
-    try:
-        await dp.start_polling()
-    finally:
-        await dp.storage.close()
-        await dp.storage.wait_closed()
-        await (await bot.get_session()).close()
-
-
-# one handler for debug them all
+# one handler for debug them all. plus test add user
 @dp.message_handler(lambda message: message.text and 'getinfo' in message.text.lower())
 async def get_message_info(message: types.Message):
     # await message.reply(message)
@@ -141,7 +107,3 @@ async def process_callback_saved3(callback_query: types.CallbackQuery):
 async def process_callback_cancel(callback_query: types.CallbackQuery):
     await callback_query.message.answer('Галя, у нас отмена!')
     await callback_query.message.delete()
-
-if __name__ == '__main__':
-    asyncio.run(main())
-    # executor.start_polling(dp, skip_updates=False)
