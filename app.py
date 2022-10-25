@@ -7,8 +7,8 @@ from db import create_tables
 from loader import bot, dp
 import handlers.handlers    # important shit. do not del
 
-# logging.basicConfig(level=logging.INFO)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 async def main() -> None:
