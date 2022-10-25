@@ -37,7 +37,7 @@ async def send_welcome(message: types.Message):
     await message.answer(text=HELP)
 
 
-@dp.message_handler(lambda message: message.text and 'dice' in message.text.lower())
+@dp.message_handler(commands=['dice'])
 async def send_dice(message: types.Message):
     await postgresql.create_user(bot['db'], message)
     await message.answer_dice(emoji='🎲', disable_notification=True)
