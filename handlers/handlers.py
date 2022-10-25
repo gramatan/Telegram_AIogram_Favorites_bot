@@ -10,20 +10,14 @@ from db import postgresql
 # one handler for debug them all. plus test add user
 @dp.message_handler(lambda message: message.text and 'getinfo' in message.text.lower())
 async def get_message_info(message: types.Message):
-    # await message.reply(message)
-
-    await bot.send_message(chat_id=LOCAL, text=message)
-
-
-@dp.message_handler(commands='add_user', chat_id=LOCAL)
-async def create_new_user(message: types.Message):
     await postgresql.create_user(bot['db'], message)
-    await message.answer('user created')
+    await bot.send_message(chat_id=LOCAL, text=message)
 
 
 # message handlers starts here
 @dp.message_handler(lambda message: message.text and '#saved' in message.text.lower())
 async def saved_notes(message: types.Message):
+    await postgresql.create_user(bot['db'], message)
     await message.send_copy(chat_id=SAVED2, disable_notification=True)
     await postgresql.user_to_logs(bot['db'], message, prefix='#saved')
     await message.delete()
@@ -31,24 +25,31 @@ async def saved_notes(message: types.Message):
 
 @dp.message_handler(lambda message: message.text and '#' in message.text.lower())
 async def any_notes(message: types.Message):
+    await postgresql.create_user(bot['db'], message)
     await message.send_copy(chat_id=NOTES, disable_notification=True)
     await postgresql.user_to_logs(bot['db'], message, prefix='#notes')
 
 
 @dp.message_handler(commands=['start', 'help'], chat_id=LOCAL)
 async def send_welcome(message: types.Message):
+    await postgresql.create_user(bot['db'], message)
+    await postgresql.user_to_logs(bot['db'], message, prefix='registration')
     await message.answer(text=HELP)
 
 
 @dp.message_handler(lambda message: message.text and 'dice' in message.text.lower())
 async def send_dice(message: types.Message):
+    await postgresql.create_user(bot['db'], message)
     await message.answer_dice(emoji='🎲', disable_notification=True)
+    await message.delete()
+    await postgresql.user_to_logs(bot['db'], message, prefix='#dice')
 
 
 # main handler
 # @dp.message_handler(content_types=ContentType.ANY, chat_id=LOCAL, user_id=LOCAL)
 @dp.message_handler(content_types=ContentType.ANY)
 async def main_message_handler(message: types.Message):
+    await postgresql.create_user(bot['db'], message)
     if message.chat.id > 0:
         chat_id = message.chat.id
         if message.sticker:
@@ -71,6 +72,7 @@ async def process_callback_notes(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=NOTES, reply_markup=blank_keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to notes')
+    await postgresql.bot_to_logs(bot['db'], callback_query, 'notes')
 
 
 @dp.callback_query_handler(text='saved2')
@@ -78,6 +80,7 @@ async def process_callback_saved2(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=SAVED2, reply_markup=blank_keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to saved2')
+    await postgresql.bot_to_logs(bot['db'], callback_query, 'saved2')
 
 
 @dp.callback_query_handler(text='learning')
@@ -92,6 +95,7 @@ async def process_callback_lazada(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=LAZADA, reply_markup=blank_keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to lazada', disable_notification=True)
+    await postgresql.bot_to_logs(bot['db'], callback_query, 'lazada')
 
 
 @dp.callback_query_handler(text='family')
@@ -99,11 +103,13 @@ async def process_callback_family(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=FAMILY1, reply_markup=blank_keyboard, disable_notification=True)
     await callback_query.message.delete()
     await callback_query.message.answer('sent to family', disable_notification=True)
+    await postgresql.bot_to_logs(bot['db'], callback_query, 'family')
 
 
 @dp.callback_query_handler(text='saved3')
 async def process_callback_saved3(callback_query: types.CallbackQuery):
     await callback_query.message.send_copy(chat_id=SAVED3, reply_markup=blank_keyboard, disable_notification=True)
+    await postgresql.bot_to_logs(bot['db'], callback_query, 'saved3')
     await callback_query.message.delete()
 
 

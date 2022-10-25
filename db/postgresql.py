@@ -29,9 +29,25 @@ async def user_to_logs(pool, message: types.Message, **kwargs):
             message_data = f'{prefix}{message.forward_from_chat.title} at {message_timestamp}'
         else:
             message_data = f'{prefix}{message.forward_from.username} at {message_timestamp}'
-
     else:
         action_type = 1
-        message_data = f'{prefix}{user} sent some message'
+        message_data = f'{prefix}{message.from_user.username} ({user}) sent some message'
 
-        await pool.execute(sql, date_time, user, action_type, message_data)
+    await pool.execute(sql, date_time, user, action_type, message_data)
+
+
+async def bot_to_logs(pool, callback: types.CallbackQuery, action):
+    sql = "INSERT INTO logs (datetime, user_id, type, action) VALUES ($1, $2, $3, $4)"
+
+    date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    user = callback.message.chat.id
+    action_type = 4
+
+    if action == 'delete':
+        message = f'message deleted'
+    elif action == 'dice':
+        message = f'#dice for {callback.message.chat.username}'
+    else:
+        message = f'from chat with {callback.message.chat.username} (callback.message.chat.id) sent to {action}'
+
+    await pool.execute(sql, date_time, user, action_type, message)
