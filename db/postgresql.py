@@ -29,6 +29,11 @@ async def user_to_logs(pool, message: types.Message, **kwargs):
             message_data = f'{prefix}{message.forward_from_chat.title} at {message_timestamp}'
         else:
             message_data = f'{prefix}{message.forward_from.username} at {message_timestamp}'
+
+    elif message.chat.id < 0:
+        action_type = 2
+        message_data = f'{prefix}{message.from_user.username} ({user}) sent some message in {message.chat.title}'
+
     else:
         action_type = 1
         message_data = f'{prefix}{message.from_user.username} ({user}) sent some message'
