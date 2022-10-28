@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 'db_password'
     ports:
-      - 5432:5433
+      - 5433:5432
     restart: always
     networks:
       - botnet
