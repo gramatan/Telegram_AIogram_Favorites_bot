@@ -1,4 +1,4 @@
-# Telegram AIogram bot
+# Telegram Extended Favorites bot
 This project is a Telegram bot built with the Aiogram library. The bot manages user messages and allows them to save, forward, and categorize messages in different channels. It uses PostgreSQL as its database to store user and bot activity logs.
 
 ## Getting Started
