@@ -1,6 +1,6 @@
 from aiogram import types
 
-from config.config import LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
+from config.config import ADMIN, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
 from handlers.main_utils import handle_sticker, handle_forwarded_message
 from keyboards.keyboards import main_keyboard, blank_keyboard
 from loader import bot
@@ -8,7 +8,7 @@ from loader import bot
 
 # one handler for debug them all. plus test add user
 async def get_message_info(message: types.Message):
-    await bot.send_message(chat_id=LOCAL, text=message)
+    await bot.send_message(chat_id=ADMIN, text=message)
 
 
 # message handlers starts here
