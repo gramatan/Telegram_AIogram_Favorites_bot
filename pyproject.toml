@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "async_bot"
+version = "2.2.0"
+description = ""
+authors = ["Andrey G <megagran.work@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+asyncio = "~3.4.3"
+aiogram = "~2.25.1"
+asyncpg = "~0.26.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

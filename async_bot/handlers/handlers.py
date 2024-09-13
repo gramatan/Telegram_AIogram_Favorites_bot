@@ -1,10 +1,9 @@
 from aiogram import types
-from aiogram.types import ContentType
 
-from config import LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
+from config.config import LOCAL, NOTES, SAVED2, LEARNING, SAVED3, LAZADA, FAMILY1, HELP
 from handlers.main_utils import handle_sticker, handle_forwarded_message
-from keyboards.keyboards import blank_keyboard, main_keyboard
-from loader import dp, bot
+from keyboards.keyboards import main_keyboard, blank_keyboard
+from loader import bot
 
 
 # one handler for debug them all. plus test add user

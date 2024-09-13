@@ -1,4 +1,4 @@
-config.py
+async_bot/config/config.py
 dnd_bot.db
 
 # Byte-compiled / optimized / DLL files

@@ -4,7 +4,7 @@ import logging
 from aiogram.types import ContentType
 from aiogram.utils import executor
 
-from config import LOCAL
+from config.config import LOCAL
 from loader import dp
 from handlers import handlers
 
